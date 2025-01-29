@@ -4,8 +4,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    env_file:
-      - dev.env
+    environment:
+      - INPUT_DIR=/data/input
+      - OUTPUT_DIR=/data/output
     volumes:
       - ./data/input:/data/input:ro
       - ./data/output:/data/output
