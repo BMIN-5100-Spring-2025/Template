@@ -198,8 +198,7 @@ resource "aws_ecs_task_definition" "template_project_task_definition" {
 }
 
 module "invoke_fargate_lambda" {
-#  source = "git@github.com:BMIN-5100-Spring-2025/infrastructure.git//invoke_fargate_lambda/terraform?ref=lambda"
-   source = "/Users/rohan/Code/bmin-5100-spring-2015/infrastructure/invoke_fargate_lambda/terraform"
+  source = "git@github.com:BMIN-5100-Spring-2025/infrastructure.git//invoke_fargate_lambda/terraform?ref=efcfcd1a87d6c15a0f635a061727b597c5a72ac8"
 
   project_name = "example-project"
   ecs_task_definition_arn = aws_ecs_task_definition.template_project_task_definition.arn
