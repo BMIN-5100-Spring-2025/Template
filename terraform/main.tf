@@ -153,6 +153,10 @@ resource "aws_cloudwatch_log_group" "template_project_ecs_log_group" {
   retention_in_days = 30  # Optional: Set log retention
 }
 
+locals {
+  ecs_task_definition_container_name = "bmin5100-example-project-container"
+}
+
 resource "aws_ecs_task_definition" "template_project_task_definition" {
   family                   = "bmin5100_example_task_definition"
   requires_compatibilities = ["FARGATE"]
@@ -168,8 +172,8 @@ resource "aws_ecs_task_definition" "template_project_task_definition" {
 
   container_definitions = jsonencode([
     {
-      name      = "bmin5100-example-project-container"
-      image     = aws_ecr_repository.template_project_ecr_repository.repository_url
+      name      = local.ecs_task_definition_container_name
+      image     = "${aws_ecr_repository.template_project_ecr_repository.repository_url}:0.0.6"
       cpu       = 512
       memory    = 1024
       essential = true
@@ -191,4 +195,23 @@ resource "aws_ecs_task_definition" "template_project_task_definition" {
       }
     }
   ])
+}
+
+module "invoke_fargate_lambda" {
+#  source = "git@github.com:BMIN-5100-Spring-2025/infrastructure.git//invoke_fargate_lambda/terraform?ref=lambda"
+   source = "/Users/rohan/Code/bmin-5100-spring-2015/infrastructure/invoke_fargate_lambda/terraform"
+
+  project_name = "example-project"
+  ecs_task_definition_arn = aws_ecs_task_definition.template_project_task_definition.arn
+  ecs_task_execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  ecs_task_task_role_arn = aws_iam_role.ecs_task_role.arn
+  ecs_task_definition_container_name = local.ecs_task_definition_container_name
+
+  ecs_cluster_arn = data.terraform_remote_state.infrastructure.outputs.ecs_cluster_arn
+  ecs_security_group_id = data.terraform_remote_state.infrastructure.outputs.ecs_security_group_id
+  private_subnet_id = data.terraform_remote_state.infrastructure.outputs.private_subnet_id
+  api_gateway_authorizer_id = data.terraform_remote_state.infrastructure.outputs.api_gateway_authorizer_id
+  api_gateway_execution_arn = data.terraform_remote_state.infrastructure.outputs.api_gateway_execution_arn
+  api_gateway_id = data.terraform_remote_state.infrastructure.outputs.api_gateway_id
+  environment_variables = {}
 }

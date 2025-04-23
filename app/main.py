@@ -65,6 +65,9 @@ if __name__ == "__main__":
 
     base_directory = os.path.dirname(os.path.dirname(__file__))
 
+    session_id = os.getenv('SESSION_ID')
+    logger.info(f"session: {session_id}")
+
     input_directory = os.getenv('INPUT_DIR', os.path.join(base_directory, 'data/input/'))
     output_directory = os.getenv('OUTPUT_DIR', os.path.join(base_directory, 'data/output/'))
 
@@ -74,14 +77,16 @@ if __name__ == "__main__":
     bucket = os.getenv('S3_BUCKET', 'local-data-bucket')
     environment = os.getenv('ENVIRONMENT', 'LOCAL').upper()
 
+    prefix = f"{session_id}/" if session_id else ""
+
     if environment != 'LOCAL':
-        logger.info(f"Downloading files from s3://{bucket}/input/ to {input_directory}")
-        download_files_from_s3(bucket, 'input/', input_directory)
+        logger.info(f"Downloading files from s3://{bucket}/{prefix}input/ to {input_directory}")
+        download_files_from_s3(bucket, f"{prefix}input/", input_directory)
 
     multiply_csvs(input_directory, output_directory)
 
     if environment != 'LOCAL':
-        logger.info(f"Uploading files from {output_directory} to s3://{bucket}/output/")
-        upload_files_to_s3(bucket, 'output/', output_directory)
+        logger.info(f"Uploading files from {output_directory} to s3://{bucket}/{prefix}output/")
+        upload_files_to_s3(bucket, f"{prefix}output/", output_directory)
 
     logger.info("Successfully Completed Multiplication")
