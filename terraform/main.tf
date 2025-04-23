@@ -60,7 +60,7 @@ resource "aws_ecr_repository" "template_project_ecr_repository" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "bmin5100-example-ECSTaskExecutionRole"
+  name = "template-project-ECSTaskExecutionRole"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -73,13 +73,13 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 }
 
 resource "aws_iam_policy_attachment" "aws_ecs_task_execution_policy_attachment" {
-  name       = "bmin5100-example-AWSECSTaskExecutionAttachment"
+  name       = "template-project-AWSECSTaskExecutionAttachment"
   roles      = [aws_iam_role.ecs_task_execution_role.name]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 resource "aws_iam_policy" "ecs_execution_task_policy" {
-  name        = "bmin5100-example-ECSNetworkInterfacePolicy"
+  name        = "template-project-ECSNetworkInterfacePolicy"
   description = "Allows ECS Fargate to manage ENIs and CloudWatch logs"
 
   policy = jsonencode({
@@ -124,7 +124,7 @@ resource "aws_iam_role" "ecs_task_role" {
 }
 
 resource "aws_iam_policy" "ecs_task_policy" {
-  name        = "bmin5100-example-ECSTaskPolicy"
+  name        = "template-project-ECSTaskPolicy"
   description = "Allows ECS task to access S3"
 
   policy = jsonencode({
