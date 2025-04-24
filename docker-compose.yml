@@ -1,6 +1,6 @@
 services:
   app:
-    image: template-example-project:0.0.4
+    image: template-example-project:0.0.8
     platform: linux/amd64
     build:
       context: .

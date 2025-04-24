@@ -4,6 +4,8 @@ import glob
 import logging
 import os
 import sys
+import json
+import base64
 
 logging.basicConfig(
     level=logging.INFO,
@@ -67,6 +69,10 @@ if __name__ == "__main__":
 
     session_id = os.getenv('SESSION_ID')
     logger.info(f"session: {session_id}")
+
+    parameters = os.getenv('PARAMETERS')
+    parameters = json.loads(base64.b64decode(parameters).decode('utf-8')) if parameters else None
+    logger.info(f"parameters: {parameters}")
 
     input_directory = os.getenv('INPUT_DIR', os.path.join(base_directory, 'data/input/'))
     output_directory = os.getenv('OUTPUT_DIR', os.path.join(base_directory, 'data/output/'))

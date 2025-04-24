@@ -173,7 +173,7 @@ resource "aws_ecs_task_definition" "template_project_task_definition" {
   container_definitions = jsonencode([
     {
       name      = local.ecs_task_definition_container_name
-      image     = "${aws_ecr_repository.template_project_ecr_repository.repository_url}:0.0.6"
+      image     = "${aws_ecr_repository.template_project_ecr_repository.repository_url}:0.0.8"
       cpu       = 512
       memory    = 1024
       essential = true
@@ -198,7 +198,7 @@ resource "aws_ecs_task_definition" "template_project_task_definition" {
 }
 
 module "invoke_fargate_lambda" {
-  source = "git@github.com:BMIN-5100-Spring-2025/infrastructure.git//invoke_fargate_lambda/terraform?ref=c5047430512ff1e46bbcc9e40c1b3c88c0455dc6"
+  source = "git@github.com:BMIN-5100-Spring-2025/infrastructure.git//invoke_fargate_lambda/terraform?ref=f844e9c04f901768ccb99aff77286165bf71b83e"
 
   project_name = "example-project"
   ecs_task_definition_arn = aws_ecs_task_definition.template_project_task_definition.arn
